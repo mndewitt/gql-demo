@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const gql = require("graphql-tag");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 
@@ -8,7 +9,9 @@ const { makeExecutableSchema } = require("graphql-tools");
 const books = [
   {
     id: "kf940",
+    inStock: false,
     title: "The Vanishing Half",
+    price: "$15.00",
     author: "Britt Benning",
     description:
       "An indelible tale of identity, family and home that centers around identical twin sisters and their daughters, all living vastly different lives",
@@ -18,6 +21,8 @@ const books = [
   {
     id: "fj894",
     title: "A Promised Land",
+    price: "$32.00",
+    inStock: true,
     author: "Barack Obama",
     description:
       "In the stirring, highly anticipated first volume of his presidential memoirs, Barack Obama tells the story of his improbable odyssey...",
@@ -27,6 +32,8 @@ const books = [
   {
     id: "fk903",
     title: "Untamed",
+    price: "$25.99",
+    inStock: false,
     author: "Glennon Doyle",
     description:
       "More than just a memoir, this book takes the reader on a journey of self-discovery. It seeks to liberate women from the societal...",
@@ -35,7 +42,9 @@ const books = [
   },
   {
     id: "so923",
+    inStock: true,
     title: "Mexican Gothic",
+    price: "$21.99",
     author: "Silvia Moreno-Garcia",
     description:
       "After receiving a frantic letter from her newly-wed cousin begging for someone to save her from a mysterious doom, Noemí Taboada heads to.",
@@ -44,17 +53,23 @@ const books = [
   },
 ];
 
-// The GraphQL schema in string form
-const typeDefs = `
+const typeDefs = gql`
   type Query {
     books: [Book!]!
   }
-  
+
+  type Mutation {
+    addBookToCart(bookId: String!): Book!
+  }
+
   type Book {
-    title: String!,
-    author: String!,
-    thumbnail: String!,
+    id: String!
+    inStock: Boolean!
+    title: String!
+    author: String!
+    thumbnail: String!
     description: String!
+    price: String!
   }
 `;
 
