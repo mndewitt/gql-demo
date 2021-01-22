@@ -7,19 +7,55 @@ const { makeExecutableSchema } = require("graphql-tools");
 // Some fake data
 const books = [
   {
-    title: "Harry Potter and the Sorcerer's stone",
-    author: "J.K. Rowling",
+    id: "kf940",
+    title: "The Vanishing Half",
+    author: "Britt Benning",
+    description:
+      "An indelible tale of identity, family and home that centers around identical twin sisters and their daughters, all living vastly different lives",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9780525536291_p0_v10%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
   },
   {
-    title: "Jurassic Park",
-    author: "Michael Crichton",
+    id: "fj894",
+    title: "A Promised Land",
+    author: "Barack Obama",
+    description:
+      "In the stirring, highly anticipated first volume of his presidential memoirs, Barack Obama tells the story of his improbable odyssey...",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9781524763169_p0_v2%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
+  },
+  {
+    id: "fk903",
+    title: "Untamed",
+    author: "Glennon Doyle",
+    description:
+      "More than just a memoir, this book takes the reader on a journey of self-discovery. It seeks to liberate women from the societal...",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9781984801258_p0_v5%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
+  },
+  {
+    id: "so923",
+    title: "Mexican Gothic",
+    author: "Silvia Moreno-Garcia",
+    description:
+      "After receiving a frantic letter from her newly-wed cousin begging for someone to save her from a mysterious doom, Noemí Taboada heads to.",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9780525620785_p0_v3%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
   },
 ];
 
 // The GraphQL schema in string form
 const typeDefs = `
-  type Query { books: [Book] }
-  type Book { title: String, author: String }
+  type Query {
+    books: [Book!]!
+  }
+  
+  type Book {
+    title: String!,
+    author: String!,
+    thumbnail: String!,
+    description: String!
+  }
 `;
 
 // The resolvers
@@ -40,7 +76,11 @@ app.use(cors());
 app.options("*", cors());
 
 // The GraphQL endpoint
-app.use("/graphql", bodyParser.json(), graphqlExpress({ schema }));
+app.use(
+  "/graphql",
+  bodyParser.json(),
+  graphqlExpress({ schema, introspection: true, playground: true })
+);
 
 // GraphiQL, a visual editor for queries
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
