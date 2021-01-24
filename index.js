@@ -5,7 +5,6 @@ const gql = require("graphql-tag");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 
-// Some fake data
 const books = [
   {
     id: "kf940",
@@ -53,6 +52,69 @@ const books = [
   },
 ];
 
+const booksWithPriceMetadata = [
+  {
+    id: "kf940",
+    title: "The Vanishing Half",
+    author: "Britt Benning",
+    description:
+      "An indelible tale of identity, family and home that centers around identical twin sisters and their daughters, all living vastly different lives",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9780525536291_p0_v10%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
+    priceMetadata: {
+      currency: "USD",
+      price: "15.00",
+      salePrice: null,
+      inStock: false,
+    },
+  },
+  {
+    id: "fj894",
+    title: "A Promised Land",
+    author: "Barack Obama",
+    description:
+      "In the stirring, highly anticipated first volume of his presidential memoirs, Barack Obama tells the story of his improbable odyssey...",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9781524763169_p0_v2%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
+    priceMetadata: {
+      currency: "USD",
+      price: "32.00",
+      salePrice: "26.99",
+      inStock: true,
+    },
+  },
+  {
+    id: "fk903",
+    title: "Untamed",
+    author: "Glennon Doyle",
+    description:
+      "More than just a memoir, this book takes the reader on a journey of self-discovery. It seeks to liberate women from the societal...",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9781984801258_p0_v5%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
+    priceMetadata: {
+      currency: "USD",
+      price: "25.99",
+      salePrice: "19.99",
+      inStock: true,
+    },
+  },
+  {
+    id: "so923",
+    title: "Mexican Gothic",
+    author: "Silvia Moreno-Garcia",
+    description:
+      "After receiving a frantic letter from her newly-wed cousin begging for someone to save her from a mysterious doom, Noemí Taboada heads to.",
+    thumbnail:
+      "https://prodimage.images-bn.com/lf?set=key%5Bresolve.pixelRatio%5D,value%5B1%5D&set=key%5Bresolve.width%5D,value%5B300%5D&set=key%5Bresolve.height%5D,value%5B10000%5D&set=key%5Bresolve.imageFit%5D,value%5Bcontainerwidth%5D&set=key%5Bresolve.allowImageUpscaling%5D,value%5B0%5D&product=path%5B/pimages/9780525620785_p0_v3%5D&call=url%5Bfile:common/decodeProduct.chain%5D",
+    priceMetadata: {
+      currency: "USD",
+      price: "21.99",
+      salePrice: "17.99",
+      inStock: true,
+    },
+  },
+];
+
 const typeDefs = gql`
   type Query {
     books: [Book!]!
@@ -70,6 +132,20 @@ const typeDefs = gql`
     thumbnail: String!
     description: String!
     price: String!
+  }
+
+  type PriceMetadata {
+    currency: Currency!
+    price: String!
+    # If available, a sale price to be displayed in the UI
+    salePrice: String
+    inStock: Boolean!
+  }
+
+  enum Currency {
+    USD
+    GBP
+    EUR
   }
 `;
 
